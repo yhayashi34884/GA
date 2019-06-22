@@ -17,6 +17,13 @@ $ git clone https://github.com/yhayashi34884/GA.git
 $ cd GA
 ```
 
+Modify following file.
+```bash
+$ vi GA.py
+# replace Function to your function (Line 38)
+function = (num1**2)+(4*(num2**2))
+```
+
 Execute following command.
 
 ```bash
