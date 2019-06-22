@@ -11,7 +11,7 @@ x2 = []
 next_x1 = []       # next generation's lists
 next_x2 = []
 y = []             # f(x) list
-compatible = []    # compatible's list
+fitness = []    # fitness's list
 
 
 def numget():
@@ -24,19 +24,21 @@ def randnum():
   return random.randint(0,255),random.randint(0,255)
 
 # Init
-def syokichi(n):
+def Init(n):
   for i in range(n):
     a1,a2 = randnum()
     x1.append(a1)
     x2.append(a2)
 
-def dainyuu(n):
+def substitute(n):
   for i in range(n):
     num1 = x1[i]
     num2 = x2[i]
-    y.append((num1**2)+(4*(num2**2)))
+    # replace Function to your function
+    function = (num1**2)+(4*(num2**2))
+    y.append(function)
 
-# Find compatibles
+# Find fitness
 def comparison(n):
   sqy = []
   sum = 0
@@ -45,13 +47,13 @@ def comparison(n):
     sum += sqy[i]
 
   for i in range(n):
-    compatible.append(round(100*(float(max(sqy)-sqy[i])/sum),5))
+    fitness.append(round(100*(float(max(sqy)-sqy[i])/sum),5))
   
   del sqy[:]
 
 # Leave excellent on the next generation
 def elitecopy():
-  per = copy.copy(compatible)
+  per = copy.copy(fitness)
   per.sort()
   per.reverse()
   flag1 = 0
@@ -59,7 +61,7 @@ def elitecopy():
   flag3 = 0
   flag4 = 0
   flag5 = 0
-  for i, com in enumerate(compatible):
+  for i, com in enumerate(fitness):
     if com == per[0] and flag1 == 0:
       next_x1.append(x1[i])
       next_x2.append(x2[i])
@@ -121,14 +123,14 @@ def mutation():
 
 
 num = numget()
-syokichi(num)
+Init(num)
 for i in range(len(x1)):
-  compatible.append(0.0)
+  fitness.append(0.0)
 
 cnt = 1
-while max(compatible) < 100:
+while max(fitness) < 100:
   num = numget()
-  del compatible[:]
+  del fitness[:]
   if len(next_x1) != 0:
     del x1[:]
     del x2[:] 
@@ -138,21 +140,21 @@ while max(compatible) < 100:
     del next_x2[:]
     del y[:]
     
-  dainyuu(num)
-  print ('************************ ‘æ{}¢‘ã *************************'.format(cnt))
+  substitute(num)
+  print ('************************ Number of generations : {}*************************'.format(cnt))
   print ('    x1 = {}'.format(x1))
   print ('    x2 = {}'.format(x2))
   print ('    y  = {}'.format(y))
   pl.plot(cnt,min(y),"r.")
   comparison(num)
-  print ('“K‡—¦ = {}'.format(compatible))
-  print ('Å¬’l = {}'.format(min(y)))
+  print ('Fitness = {}'.format(fitness))
+  print ('Solution = {}'.format(min(y)))
   elitecopy()
   crossover()
   mutation()
   cnt += 1
 
 pl.title(u"Minimum value of $ y = x_1^2+4x_2^2 $")
-pl.ylabel(u"Å¬’l")
-pl.xlabel(u"¢‘ã”")
+pl.ylabel(u"Solution")
+pl.xlabel(u"Number of generations")
 pl.show()
